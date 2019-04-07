@@ -3,12 +3,10 @@ module Lib where
 
 import Data.List
 import Debug.Trace
-import Control.Monad.State
-import qualified ListT as ListT 
 import Control.Monad.ST
 import Data.Array.ST
 import Data.Maybe
-
+import Control.Monad
 
 popAt :: Int -> [a] -> (a,[a])
 popAt 0 (a:b) = (a,b)
