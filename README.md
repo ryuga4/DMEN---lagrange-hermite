@@ -1,3 +1,6 @@
+Michał Jankun
+s434703
+
 ## Wymagania
 
 Program korzysta z biblioteki `array`. Aby uruchomić program, najprościej jest pobrać całe repozytorium, a następnie uruchomić za pomocą `stack run`.
