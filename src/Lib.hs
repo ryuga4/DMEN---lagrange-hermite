@@ -29,16 +29,12 @@ fact n = n * fact (n-1)
 takeD :: Double -> Int -> [(Double,[Double])] -> Double
 takeD x n xys = (snd $ fromJust $ find ((==x) . fst) xys) !! n
 
-nodeN :: Double -> [(Double,[Double])] -> Int
-nodeN x xys = length $ snd $ fromJust $ find ((==x) . fst) xys
-
-hermite :: [(Double,[Double])] -> Double -> Double
-hermite xys input = runST transformer
+hermite' :: [(Double,[Double])] -> [(Double,[Double])]
+hermite' xys = runST transformer
   where
     fstCol = concat $ map (\(a,bs)->map (const a) bs) xys
     sndCol = concat  $ map (\(a,b:bs) -> map (const b) (b:bs)) xys
     size = sum $ map (length . snd) xys 
-    transformer :: ST s Double 
     transformer = do
       m <- (newArray ((0,0),(size-1,size-1)) Nothing :: ST s (STArray s (Int,Int) (Maybe Double)))
       
@@ -60,11 +56,9 @@ hermite xys input = runST transformer
             let d = takeD q1 x xys
             writeArray m (x,y) $ Just $ d / (fromIntegral $ fact x)
 
-      topOnes <- forM [0..size-1] $ \x -> do
+      forM [0..size-1] $ \x -> do
         Just c <- readArray m (x,x)
         return (c, take x fstCol)
 
-      return $ sum $ map (\(a,b) -> a * product (map (\i -> input - i) b)) topOnes
-
-
+hermite topOnes input = sum $ map (\(a,b) -> a * product (map (\i -> input - i) b)) topOnes
 
